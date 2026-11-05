@@ -1,0 +1,10 @@
+experiment:
+  name: Breast_Cancer_Classification
+model:
+  max_depth: null
+  min_samples_split: 2
+  n_estimators: 200
+  type: random_forest
+training:
+  random_state: 42
+  test_size: 0.2
