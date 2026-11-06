@@ -2,12 +2,12 @@ import yaml
 import argparse
 import mlflow
 import mlflow.sklearn
+from mlflow.models.signature import infer_signature  
 import joblib
 import os
 from sklearn.ensemble import RandomForestClassifier
 
 # Import modules from your src folder
-#from data_preprocessing import load_and_split_data
 from data_preprocessing import process_and_save_data
 from evaluate import evaluate_and_report
 
@@ -20,9 +20,11 @@ def main(config_path):
     config = load_config(config_path)
     mlflow.set_experiment(config['experiment']['name'])
     
+    # 2. ENABLE AUTOLOGGING (But disable auto-model saving to prevent conflicts)
+    mlflow.sklearn.autolog(log_models=False)
+    
     with mlflow.start_run():
         # Load, Preprocess, and Split Dataset
-        #X_train, X_test, y_train, y_test, target_names = load_and_split_data(
         X_train, X_test, y_train, y_test, target_names = process_and_save_data(
             test_size=config['training']['test_size'],
             random_state=config['training']['random_state']
@@ -45,18 +47,15 @@ def main(config_path):
         os.makedirs("models", exist_ok=True)
         joblib.dump(rf, "models/random_forest_model.pkl")
         
-        # Log Parameters, Metrics, Artifacts, and Model to MLflow
-        mlflow.log_params({
-            "model_type": config['model']['type'],
-            "n_estimators": config['model']['n_estimators'],
-            "max_depth": config['model']['max_depth'],
-            "test_size": config['training']['test_size'],
-            "random_state": config['training']['random_state']
-        })
-        mlflow.log_metrics(metrics)
+        # 3. INFER THE MODEL SIGNATURE
+        signature = infer_signature(X_train, rf.predict(X_train))
+        
+        # Log Custom Artifacts
         mlflow.log_artifact("reports/figures/confusion_matrix.png")
         mlflow.log_artifact("reports/classification_report.txt")
-        mlflow.sklearn.log_model(rf, "random_forest_model")
+        
+        # 4. MANUALLY LOG THE MODEL WITH THE SIGNATURE
+        mlflow.sklearn.log_model(rf, "random_forest_model", signature=signature)
         
         print(f"Pipeline executed successfully. Accuracy: {metrics['accuracy']:.4f}")
 
