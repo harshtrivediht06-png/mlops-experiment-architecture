@@ -22,4 +22,4 @@ if __name__ == "__main__":
     
     print("\n--- Prediction Results ---")
     for i, pred in enumerate(predictions):
-        print(f"Sample {i+1}: Predicted Class {pred}")
+        print(f"Sample {i+1}: Actual Class {actual_y[i]} | Predicted Class {prediction}")
