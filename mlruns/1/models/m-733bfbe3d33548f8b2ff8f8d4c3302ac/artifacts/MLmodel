@@ -1,0 +1,23 @@
+artifact_path: file:C:/Users/harsh/mlops-lab-3-4/mlruns/1/models/m-733bfbe3d33548f8b2ff8f8d4c3302ac/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.skops
+    predict_fn: predict
+    python_version: 3.13.7
+  sklearn:
+    code: null
+    pickled_model: model.skops
+    serialization_format: skops
+    sklearn_version: 1.8.0
+    skops_trusted_types: null
+mlflow_version: 3.15.1
+model_id: m-733bfbe3d33548f8b2ff8f8d4c3302ac
+model_size_bytes: 928817
+model_uuid: m-733bfbe3d33548f8b2ff8f8d4c3302ac
+prompts: null
+run_id: e4de56a9c257420b8c5df6e8a7a2de41
+utc_time_created: '2026-11-05 10:42:58.130339'
