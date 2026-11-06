@@ -13,13 +13,19 @@ if __name__ == "__main__":
     print("Loading model...")
     pipeline = load_model()
     
-    # Load a few samples from our processed test set to simulate "new" records
     print("Loading sample data...")
     X_test_sample = pd.read_csv("data/processed/X_test.csv").head(5)
+    
+    # NEW: Load the actual labels to compare against
+    y_test_sample = pd.read_csv("data/processed/y_test.csv").head(5)
+    
+    # Convert the label dataframe to a flat list/array for easy indexing
+    actual_y = y_test_sample.values.flatten()
     
     print("Generating predictions...")
     predictions = predict(pipeline, X_test_sample)
     
     print("\n--- Prediction Results ---")
     for i, pred in enumerate(predictions):
-        print(f"Sample {i+1}: Actual Class {actual_y[i]} | Predicted Class {prediction}")
+        # FIXED: Changed {prediction} to {pred}
+        print(f"Sample {i+1}: Actual Class {actual_y[i]} | Predicted Class {pred}")
